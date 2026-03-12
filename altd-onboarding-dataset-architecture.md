@@ -4,7 +4,7 @@ Product coordinates requirements with all teams from the center. Two paths exist
 
 ```mermaid
 graph TD
-    PRODUCT[🎯 PRODUCT TEAM<br/>Central Coordinator]
+    PRODUCT[PRODUCT TEAM<br/>Central Coordinator]
 
     subgraph EXTERNAL[" EXTERNAL DATASET PATH "]
         A1_EXT[A1 TEAM<br/>Ingesting, Cleaning,<br/>Enriching, Applying<br/>Business Graph Logic]
@@ -18,8 +18,8 @@ graph TD
     TI[TI TEAM<br/>BQL, Entitlements & Ingestion]
     UI[UI TEAM<br/>Service Integration & Display]
 
-    READY[✅ All Services Ready]
-    USERS[👥 ALTD Clients]
+    READY[All Services Ready]
+    USERS[ALTD Clients]
 
     PRODUCT -->|Data Requirements| A1_EXT
     PRODUCT -->|Data Requirements| INT_TEAM
@@ -32,11 +32,11 @@ graph TD
     AM -->|Business graph logic| INT_TEAM
     INT_TEAM -->|Aggregated/raw data| TI
 
-    AM -->|Transformed files<br/>Configure metrics| TI
+    AM -->|Transformed files<br/>Configure metrics<br/>Data Delivery| TI
 
     TI -->|Make data accessible| READY
     READY --> UI
-    UI -->|altdsvc calls all services:<br/>- altdmetadatasvc<br/>- altddatasvc<br/>Displays on ALTD GO| USERS
+    UI --> USERS
 
     style PRODUCT fill:#fff9c4,stroke:#f57f17,stroke-width:3px
     style AM fill:#4fc3f7,stroke:#0277bd,stroke-width:3px
@@ -78,6 +78,9 @@ graph TD
             S1_KAFKA["Kafka Topic"]
             S1_CH_HANDLER["Handler: ClickHouse Ingestion<br/>→ Argo Workflow → ClickHouse"]
             S1_DS_HANDLER["Handler: Delivery to BCS<br/>→ Argo Workflow → BCS Buckets"]
+            S1_KTD_REPO["deepwater-transform repo"]
+            S1_KTD_BOX["Key Trend Drivers"]
+            S1_KTD_HANDLER["KTD Data Creation/Delivery<br/>→ Argo Workflow → BCS Buckets"]
         end
     end
 
@@ -143,6 +146,10 @@ graph TD
     S1_DS_HANDLER --> TI_INGEST
     S1_DS_HANDLER --> S2_DATASVC_REPO
 
+    S1_KTD_REPO --> S1_KTD_BOX
+    S1_KTD_BOX --> S1_KTD_HANDLER
+    S1_KTD_HANDLER --> TI_INGEST
+
     TI_INGEST --> TI_BQL
 
     S2_DATASVC_REPO --> S2_DATASVC_SVC
@@ -180,6 +187,8 @@ graph TD
     style OFF_PREM fill:#f5f5f5,stroke:#666,stroke-width:2px,color:#000
     style ON_PREM fill:#f5f5f5,stroke:#666,stroke-width:2px,color:#000
     style S1_REPO fill:#1e88e5,stroke:#0d47a1,stroke-width:3px,color:#fff
+    style S1_KTD_REPO fill:#1e88e5,stroke:#0d47a1,stroke-width:3px,color:#fff
+    style S1_KTD_BOX fill:#000,stroke:#000,stroke-width:3px,color:#fff
     style S2_DATASVC_REPO fill:#1e88e5,stroke:#0d47a1,stroke-width:3px,color:#fff
     style S2_WORKFLOWS_REPO fill:#1e88e5,stroke:#0d47a1,stroke-width:3px,color:#fff
     style S4_METASVC fill:#ce93d8,stroke:#6a1b9a,stroke-width:3px
