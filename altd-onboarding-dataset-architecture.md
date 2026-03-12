@@ -53,8 +53,8 @@ This diagram shows A&M's work organized by stages with repos, services, and tabl
 ```mermaid
 graph TD
     subgraph INPUT[" INPUT FROM A1 / INTERNAL TEAM "]
-        A1_FILES["📁 AWS S3 Files from A1<br/>business-graph-metadata-v2<br/>&lt;dataset&gt; raw-clean data"]
-        INT_DATA["📁 Internal Dataset<br/>From Internal Bloomberg Team<br/> "]
+        A1_FILES["AWS S3 Files from A1<br/>business-graph-metadata-v2<br/>&lt;dataset&gt; raw-clean data"]
+        INT_DATA["Internal Dataset<br/>From Internal Bloomberg Team<br/> "]
     end
 
     subgraph STAGE1[" "]
@@ -74,7 +74,7 @@ graph TD
         end
 
         subgraph ON_PREM[" ON-PREMISES "]
-            S1_REPO["🔷 altd-kafka-consumer repo"]
+            S1_REPO["altd-kafka-consumer repo"]
             S1_KAFKA["Kafka Topic"]
             S1_CH_HANDLER["Handler: ClickHouse Ingestion<br/>→ Argo Workflow → ClickHouse"]
             S1_DS_HANDLER["Handler: Delivery to BCS<br/>→ Argo Workflow → BCS Buckets"]
@@ -84,25 +84,25 @@ graph TD
     subgraph STAGE2[" "]
         direction TB
         STAGE2_TITLE["STAGE 2: SERVICE CONFIGURATION"]
-        S2_DATASVC_REPO["🔷 altddatasvc repo<br/>Add configuration support<br/>Add logic for observed metrics needing extra support<br/>Update KPI estimates methodology for special metrics"]
-        S2_WORKFLOWS_REPO["🔷 altd-data-workflows repo<br/>Add mapping info from Product<br/>Add metadata (metrics, breakouts, periodicities)"]
-        S2_DATASVC_SVC["⚙️ altddatasvc service"]
+        S2_DATASVC_REPO["altddatasvc repo<br/>Add configuration support<br/>Add logic for observed metrics needing extra support<br/>Update KPI estimates methodology for special metrics"]
+        S2_WORKFLOWS_REPO["altd-data-workflows repo<br/>Add mapping info from Product<br/>Add metadata (metrics, breakouts, periodicities)"]
+        S2_DATASVC_SVC["altddatasvc service"]
     end
 
     subgraph STAGE3[" "]
         direction TB
         STAGE3_TITLE["STAGE 3: TABLE UPDATES & WORKFLOWS - Strict Order"]
 
-        S3_DATASET["📊 altd_datasets<br/>PRQS SQL manual"]
+        S3_DATASET["altd_datasets<br/>PRQS SQL manual"]
 
-        S3_META_WF["🔄 Metadata Workflow<br/>PRQS EX manual"]
-        S3_META_TABLES["📊 altd_metrics_metadata<br/>altd_metrics_breakouts<br/>altd_metrics_periodicities"]
+        S3_META_WF["Metadata Workflow<br/>PRQS EX manual"]
+        S3_META_TABLES["altd_metrics_metadata<br/>altd_metrics_breakouts<br/>altd_metrics_periodicities"]
 
-        S3_MAP_WF["🔄 Mapping Workflow<br/>Scheduled 3pm daily"]
-        S3_MAP_TABLE["📊 cofi_altd_mapping"]
+        S3_MAP_WF["Mapping Workflow<br/>Scheduled 3pm daily"]
+        S3_MAP_TABLE["cofi_altd_mapping"]
 
-        S3_KPI_WF["🔄 KPI Recommendation<br/>Scheduled 5pm daily"]
-        S3_KPI_TABLE["📊 kpi_recommendation_scores"]
+        S3_KPI_WF["KPI Recommendation<br/>Scheduled 5pm daily"]
+        S3_KPI_TABLE["kpi_recommendation_scores"]
     end
 
     subgraph TI_INFRA[" TI INFRASTRUCTURE "]
@@ -111,10 +111,10 @@ graph TD
     end
 
     subgraph STAGE4[" "]
-        STAGE4_TITLE["STAGE 4: AUTO-PROPAGATION - All services TI-maintained"]
-        S4_METASVC["⚙️ altdmetadatasvc"]
-        S4_DATASVC["⚙️ altddatasvc"]
-        S4_ALTSVC["⚙️ altdsvc"]
+        STAGE4_TITLE["STAGE 4: AUTO-PROPAGATION - TI: metadatasvc & datasvc | UI: altdsvc"]
+        S4_METASVC["altdmetadatasvc"]
+        S4_DATASVC["altddatasvc"]
+        S4_ALTSVC["altdsvc"]
     end
 
     subgraph STAGE5[" STAGE 5: UI READINESS "]
@@ -146,7 +146,7 @@ graph TD
     TI_INGEST --> TI_BQL
 
     S2_DATASVC_REPO --> S2_DATASVC_SVC
-    S2_WORKFLOWS_REPO --> S3_DATASET
+    S2_WORKFLOWS_REPO --> S3_META_WF
 
     S3_DATASET --> S3_META_WF
     S3_META_WF --> S3_META_TABLES
